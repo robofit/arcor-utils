@@ -37,6 +37,17 @@ def feeder_item(it_id, on_success=None, on_failure=0, obj_type="", ref_id=[]):
     return p
 
 
+def visual_inspection_item(it_id, ref_id, on_success=None, on_failure=0):
+
+    p = item(it_id, ProgramItem.VISUAL_INSPECTION, on_success, on_failure, ref_id=ref_id)
+
+    ps = PoseStamped()
+    ps.header.frame_id = "marker"
+    p.pose.append(ps)
+
+    return p
+
+
 def place_item(it_id, ref_id, on_success=None, on_failure=0):
 
     p = item(it_id, ProgramItem.PLACE_TO_POSE, on_success, on_failure, ref_id=ref_id)
