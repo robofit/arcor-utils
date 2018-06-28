@@ -9,7 +9,7 @@ from geometry_msgs.msg import PoseStamped, PolygonStamped
 
 def polygon_item(it_id, on_success=None, on_failure=0, obj_type="", ref_id=[]):
 
-    p = item(it_id, ProgramItem.PICK_FROM_POLYGON, on_success, on_failure, ref_id=ref_id)
+    p = item(it_id, "PickFromPolygon", on_success, on_failure, ref_id=ref_id)
 
     pp = PolygonStamped()
     pp.header.frame_id = "marker"
@@ -24,7 +24,7 @@ def polygon_item(it_id, on_success=None, on_failure=0, obj_type="", ref_id=[]):
 
 def feeder_item(it_id, on_success=None, on_failure=0, obj_type="", ref_id=[]):
 
-    p = item(it_id, ProgramItem.PICK_FROM_FEEDER, on_success, on_failure, ref_id=ref_id)
+    p = item(it_id, "PickFromFeeder", on_success, on_failure, ref_id=ref_id)
 
     if len(ref_id) == 0:
 
@@ -37,9 +37,21 @@ def feeder_item(it_id, on_success=None, on_failure=0, obj_type="", ref_id=[]):
     return p
 
 
-def place_item(it_id, ref_id, on_success=None, on_failure=0):
+def visual_inspection_item(it_id, ref_id, on_success=None, on_failure=0):
 
-    p = item(it_id, ProgramItem.PLACE_TO_POSE, on_success, on_failure, ref_id=ref_id)
+    p = item(it_id, "VisualInspection", on_success, on_failure, ref_id=ref_id)
+
+    ps = PoseStamped()
+    ps.header.frame_id = "marker"
+    p.pose.append(ps)
+
+    return p
+
+
+def place_item(it_id, ref_id, on_success=None, on_failure=0, name=""):
+
+    p = item(it_id, "PlaceToPose", on_success, on_failure, ref_id=ref_id)
+    p.name = name
     ps = PoseStamped()
     ps.header.frame_id = "marker"
     p.pose.append(ps)
@@ -49,7 +61,7 @@ def place_item(it_id, ref_id, on_success=None, on_failure=0):
 
 def grid_item(it_id, ref_id, on_success=None, on_failure=0, objects=2):
 
-    p = item(it_id, ProgramItem.PLACE_TO_GRID, on_success, on_failure, ref_id=ref_id)
+    p = item(it_id, "PlaceToGrid", on_success, on_failure, ref_id=ref_id)
     pp = PolygonStamped()
     pp.header.frame_id = "marker"
     p.polygon.append(pp)
@@ -62,7 +74,7 @@ def grid_item(it_id, ref_id, on_success=None, on_failure=0, objects=2):
 
 def drill_item(it_id, ref_id=[], on_success=None, on_failure=0, holes=2, obj_type=[]):
 
-    p = item(it_id, ProgramItem.DRILL_POINTS, on_success, on_failure, ref_id=ref_id)
+    p = item(it_id, "DrillPoints", on_success, on_failure, ref_id=ref_id)
 
     if len(ref_id) == 0:
 
@@ -83,7 +95,7 @@ def drill_item(it_id, ref_id=[], on_success=None, on_failure=0, holes=2, obj_typ
 
 def wait_item(it_id, ref_id=[], on_success=None, on_failure=0):
 
-    p = item(it_id, ProgramItem.WAIT_UNTIL_USER_FINISHES, on_success, on_failure, ref_id=ref_id)
+    p = item(it_id, "WaitUntilUserFinishes", on_success, on_failure, ref_id=ref_id)
     pp = PolygonStamped()
     pp.header.frame_id = "marker"
     p.polygon.append(pp)
@@ -105,10 +117,11 @@ def item(it_id, it_type, on_success=None, on_failure=0, ref_id=[]):
     return p
 
 
-def obj_type(type_name, bbx, bby, bbz):
+def obj_type(type_name, bbx, bby, bbz, container=False):
 
     ot = ObjectType()
     ot.name = type_name
     ot.bbox.type = SolidPrimitive.BOX
     ot.bbox.dimensions = [bbx, bby, bbz]
+    ot.container = container
     return ot
