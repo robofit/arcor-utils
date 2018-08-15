@@ -5,7 +5,18 @@ from art_utils.object_helper import ObjectHelper
 import rospy
 
 
-def array_from_param(param, target_type=str, expected_length=None, default=None):
+def wait_for_param(param, sleep=0.5):
+
+    while not rospy.has_param(param):
+
+        rospy.loginfo("Waiting for param: " + param)
+        rospy.sleep(sleep)
+
+
+def array_from_param(param, target_type=str, expected_length=None, default=None, wait=False):
+
+    if wait:
+        wait_for_param(param)
 
     try:
         par = rospy.get_param(param)
