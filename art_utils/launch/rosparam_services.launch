@@ -1,0 +1,6 @@
+<launch>
+
+    <node pkg="art_utils" type="rosparam_services.py" name="rosparam_service_node" output="screen">
+    </node>
+
+</launch>
