@@ -1,4 +1,4 @@
-from art_utils.art_api_helper import ArtApiHelper
+from art_utils.art_api_helper import ArtApiHelper, ArtApiException
 from art_utils.api_definition import APIGroup, Topic, Service, Action, ArtAPI
 from art_utils.object_helper import ObjectHelper
 
@@ -26,6 +26,9 @@ def array_from_param(param, target_type=str, expected_length=None, default=None,
             raise KeyError(e)
         else:
             return default
+
+    if not par:
+        return []
 
     tmp = []
 
