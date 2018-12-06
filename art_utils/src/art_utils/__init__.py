@@ -9,6 +9,9 @@ def wait_for_param(param, sleep=0.5):
 
     while not rospy.has_param(param):
 
+        if rospy.is_shutdown():
+            raise rospy.ROSInterruptException()
+
         rospy.loginfo("Waiting for param: " + param)
         rospy.sleep(sleep)
 
