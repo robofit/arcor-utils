@@ -1,18 +1,19 @@
 #!/usr/bin/env python
 import rospy
-from art_msgs.srv import getARTableConfig, getARTableConfigResponse
-from art_msgs.msg import ARTableConfig
+from art_msgs.srv import GetRosparam, GetRosparamResponse
 
 
 class RosparamServices:
     def __init__(self):
-        self.get_art_conf_srv = rospy.Service('/art/conf/get', getARTableConfig, self.art_rosparam_conf_get_cb)
-        rospy.spin()
+        self.get_rosparam_service = rospy.Service('/rosparam_get', GetRosparam, self.get_rosparam_cb)
 
-    def art_rosparam_conf_get_cb(self, req):
-        conf = rospy.get_param("/art/conf")
-        table_size = conf["table"]["size"].split(",")
-        return getARTableConfigResponse(conf=ARTableConfig(table_size=table_size,world_frame=conf["world_frame"]))
+    def get_rosparam_cb(self, req):
+        try:
+            param = rospy.get_param(req.param_name)
+        except KeyError:
+            param = "ERROR: Parameter [" + req.param_name + "] is not set"
+
+        return GetRosparamResponse(str(param))
 
 
 if __name__ == "__main__":
@@ -20,5 +21,6 @@ if __name__ == "__main__":
 
     try:
         node = RosparamServices()
+        rospy.spin()
     except rospy.ROSInterruptException:
         pass
