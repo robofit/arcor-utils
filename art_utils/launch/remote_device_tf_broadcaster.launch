@@ -1,0 +1,5 @@
+<launch>
+
+    <node name="remote_device_tf_broadcaster" pkg="art_utils" type="remote_device_tf_broadcaster.py" output="screen" />
+
+</launch>
