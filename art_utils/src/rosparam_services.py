@@ -15,7 +15,7 @@ class RosparamServices:
             param = rospy.get_param(req.param_name)
             success = True
         except KeyError:
-            param = "{}"
+            param = {}
 
         return GetRosparamResponse(success=success, message=json.dumps(param))
 
